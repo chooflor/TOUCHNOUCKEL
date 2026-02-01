@@ -52,9 +52,9 @@ def social_section():
         social_content = (
             "\n[bold #1DA1F2]── INVESTIGATION ──[/bold #1DA1F2]\n"
             " [bold #1DA1F2]1[/bold #1DA1F2] ➔ [white]USERNAME SCANNER[/white] [dim](Sherlock Engine)[/dim]\n"
-            " [bold #1DA1F2]2[/bold #1DA1F2] ➔ [white]USERFINDER[/white]\n"
+            " [bold #1DA1F2]2[/bold #1DA1F2] ➔ [white]USERFINDER[/white] [dim](Targeted Scan)[/dim]\n"
             "\n[bold #1DA1F2]── ANALYSIS ──[/bold #1DA1F2]\n"
-            " [bold #1DA1F2]3[/bold #1DA1F2] ➔ [white]FRIENDSHIP LINKER[/white]\n"
+            " [bold #1DA1F2]3[/bold #1DA1F2] ➔ [white]FRIENDSHIP LINKER[/white] [dim](Cross-Reference)[/dim]\n"
             " [bold #1DA1F2]4[/bold #1DA1F2] ➔ [white]DISCORD TOKEN CHECKER[/white]\n"
             "\n[bold #1DA1F2]── EXTRACTION ──[/bold #1DA1F2]\n"
             " [bold #1DA1F2]5[/bold #1DA1F2] ➔ [white]MASS DOWNLOADER[/white]\n"
@@ -66,9 +66,13 @@ def social_section():
         choice = Prompt.ask("\n[bold #1DA1F2]┌───[[/bold #1DA1F2][bold white]root@osichef[/bold white][bold #1DA1F2]]\n└──╼ [/bold #1DA1F2]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
         
         if choice == "1": 
-            execute("user_scan.py") # Ton script Sherlock local
+            execute("user_scan.py")
+        elif choice == "2":
+            execute("user_finder.py")
+        elif choice == "3":
+            execute("friend_linker.py") # LANCE LE NOUVEAU MODULE
         elif choice == "4":
-            execute("discord_check.py") # À coder plus tard
+            execute("discord_check.py")
         elif choice == "6": 
             break
 
@@ -103,7 +107,7 @@ def osint_section():
         choice = Prompt.ask("\n[bold green]┌───[[/bold green][bold white]root@osichef[/bold white][bold green]]\n└──╼ [/bold green]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
         
         if choice == "5": 
-            execute("email_intel.py") # Ton script Holehe local
+            execute("email_intel.py")
         elif choice == "6": 
             break
 
