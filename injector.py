@@ -1,7 +1,8 @@
+# injector.py
 import os
+import sys
 import time
 import subprocess
-import sys
 from rich.console import Console
 from rich.panel import Panel
 from rich.text import Text
@@ -10,7 +11,6 @@ from rich.align import Align
 
 console = Console()
 
-# --- CONFIGURATION VISUELLE ---
 EXOTIC_BANNER = """
             ██████╗ ███████╗██╗ ██████╗██╗  ██╗███████╗███████╗
           ██╔═══██╗██╔════╝██║██╔════╝██║  ██║██╔════╝██╔════╝
@@ -29,12 +29,10 @@ def generate_hacker_colors(text_str):
     return colored_text
 
 def execute(script_name):
-    """Lance les modules externes situés dans le même dossier"""
     if os.path.exists(script_name):
         try:
             console.print(f"\n[bold cyan][*] Initialisation du module : {script_name}...[/bold cyan]")
             time.sleep(0.5)
-            # Utilise l'exécutable Python actuel pour lancer le script
             subprocess.run([sys.executable, script_name])
         except Exception as e:
             console.print(f"\n[bold red][!] Erreur lors de l'exécution : {e}[/bold red]")
@@ -43,12 +41,11 @@ def execute(script_name):
         console.print(f"\n[bold red][!] ERREUR : Le fichier '{script_name}' est introuvable.[/bold red]")
         time.sleep(2)
 
-# --- SECTION 1 : SOCIAL NETWORK ---
+# SECTION 1 : SOCIAL NETWORK
 def social_section():
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         console.print(Align.center(generate_hacker_colors(EXOTIC_BANNER)))
-        
         social_content = (
             "\n[bold #1DA1F2]── INVESTIGATION ──[/bold #1DA1F2]\n"
             " [bold #1DA1F2]1[/bold #1DA1F2] ➔ [white]USERNAME SCANNER[/white] [dim](Sherlock Engine)[/dim]\n"
@@ -60,23 +57,15 @@ def social_section():
             " [bold #1DA1F2]5[/bold #1DA1F2] ➔ [white]MASS DOWNLOADER[/white]\n"
             "\n [bold white]6[/bold white] ➔ [yellow]BACK TO MAIN CORE[/yellow]\n"
         )
-        
         console.print(Align.center(Panel(social_content, title="[bold #1DA1F2]─── SOCIAL ARCHITECT ───[/bold #1DA1F2]", border_style="#1DA1F2", padding=(1, 5), expand=False)))
-        
         choice = Prompt.ask("\n[bold #1DA1F2]┌───[[/bold #1DA1F2][bold white]root@osichef[/bold white][bold #1DA1F2]]\n└──╼ [/bold #1DA1F2]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
-        
-        if choice == "1": 
-            execute("user_scan.py")
-        elif choice == "2":
-            execute("user_finder.py")
-        elif choice == "3":
-            execute("friend_linker.py") # LANCE LE NOUVEAU MODULE
-        elif choice == "4":
-            execute("discord_check.py")
-        elif choice == "6": 
-            break
+        if choice == "1": execute("user_scan.py")
+        elif choice == "2": execute("user_finder.py")
+        elif choice == "3": execute("friend_linker.py")
+        elif choice == "4": execute("discord_check.py")
+        elif choice == "6": break
 
-# --- SECTION 3 : ATTACK ---
+# SECTION 3 : ATTACK
 def attack_section():
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -90,7 +79,7 @@ def attack_section():
         choice = Prompt.ask("\n[bold red]┌───[[/bold red][bold white]root@osichef[/bold white][bold red]]\n└──╼ [/bold red]", choices=["1", "2", "3"], show_choices=False)
         if choice == "3": break
 
-# --- SECTION 4 : OSINT ---
+# SECTION 4 : OSINT
 def osint_section():
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
@@ -105,19 +94,38 @@ def osint_section():
         )
         console.print(Align.center(Panel(osint_content, title="[bold green]─── OSINT INVESTIGATION ───[/bold green]", border_style="green", padding=(1, 5), expand=False)))
         choice = Prompt.ask("\n[bold green]┌───[[/bold green][bold white]root@osichef[/bold white][bold green]]\n└──╼ [/bold green]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
-        
-        if choice == "5": 
-            execute("email_intel.py")
-        elif choice == "6": 
-            break
+        if choice == "5": execute("email_intel.py")
+        elif choice == "6": break
 
-# --- MENU PRINCIPAL ---
+# SECTION 5 : TOOLS
+def tools_section():
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        console.print(Align.center(generate_hacker_colors(EXOTIC_BANNER)))
+        tools_content = (
+            "\n[bold magenta]1[/bold magenta] ➔ [white]INSTALL DEPENDENCIES[/white]\n"
+            "[bold magenta]2[/bold magenta] ➔ [white]UPDATE MODULES[/white]\n"
+            "[bold magenta]3[/bold magenta] ➔ [white]IP GEOLOCATION[/white]\n"
+            "[bold magenta]4[/bold magenta] ➔ [white]DNS ENUMERATION[/white]\n"
+            "[bold magenta]5[/bold magenta] ➔ [white]NMAP SCANNER[/white]\n"
+            "\n[bold white]6[/bold white] ➔ [yellow]BACK TO MAIN CORE[/yellow]\n"
+        )
+        console.print(Align.center(Panel(tools_content, title="[bold magenta]─── TOOLBOX ───[/bold magenta]", border_style="magenta", padding=(1, 5), expand=False)))
+        choice = Prompt.ask("\n[bold magenta]┌───[[/bold magenta][bold white]root@osichef[/bold white][bold magenta]]\n└──╼ [/bold magenta]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
+        if choice == "1": execute("tools/install_deps.py")
+        elif choice == "2": execute("tools/update_modules.py")
+        elif choice == "3": execute("tools/ip_geo.py")
+        elif choice == "4": execute("tools/dns_enum.py")
+        elif choice == "5": execute("tools/nmap_scan.py")
+        elif choice == "6": break
+
+# MENU PRINCIPAL
 def main_menu():
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         console.print(Align.center(generate_hacker_colors(EXOTIC_BANNER)))
         console.print(Align.center(Text("⚡ SYSTEM STATUS: OPERATIONAL ⚡", style="bold #00FF00 blink")))
-        
+
         menu_content = (
             "\n[bold #00FF00]1[/bold #00FF00] ➔ [white]SOCIAL NETWORK[/white]\n"
             "[bold #00FF00]2[/bold #00FF00] ➔ [white]VIRUS BUILDER[/white]\n"
@@ -128,10 +136,10 @@ def main_menu():
         )
         console.print(Align.center(Panel(menu_content, title="[bold #FFFFFF]─── SECURITY INTERFACE ───[/bold #FFFFFF]", border_style="#00FF00", padding=(1, 5), expand=False)))
         choice = Prompt.ask("\n[bold #00FF00]┌───[[/bold #00FF00][bold white]root@osichef[/bold white][bold #00FF00]]\n└──╼ [/bold #00FF00]", choices=["1", "2", "3", "4", "5", "6"], show_choices=False)
-        
         if choice == "1": social_section()
         elif choice == "3": attack_section()
         elif choice == "4": osint_section()
+        elif choice == "5": tools_section()
         elif choice == "6": 
             console.print("[bold red]Déconnexion en cours...[/bold red]")
             time.sleep(1)

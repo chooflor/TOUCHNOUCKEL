@@ -1,1 +1,6 @@
-This is a Multitools by azpro, based on OSINT and attack.
+# Osichef Toolkit
+
+## Installation
+
+```bash
+python tools/install_deps.py
