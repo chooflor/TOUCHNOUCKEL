@@ -7,6 +7,31 @@ from rich.console import Console
 
 console = Console()
 
+def is_git_installed():
+    try:
+        subprocess.run(["git", "--version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        return True
+    except (subprocess.CalledProcessError, FileNotFoundError):
+        return False
+
+def install_git():
+    system = platform.system()
+    try:
+        if system == "Windows":
+            console.print("[*] Installing Git (Windows)...", style="bold yellow")
+            # Télécharge et installe Git via winget
+            subprocess.check_call(["winget", "install", "--id", "Git.Git", "-e", "--source", "winget"])
+        elif system == "Linux":
+            console.print("[*] Installing Git (Linux)...", style="bold yellow")
+            subprocess.check_call(["sudo", "apt", "install", "-y", "git"])
+        else:
+            console.print("[!] Unsupported OS for Git install.", style="bold red")
+            return False
+        return True
+    except Exception as e:
+        console.print(f"[!] Failed to install Git: {e}", style="bold red")
+        return False
+
 def install_nmap():
     system = platform.system()
     try:
@@ -30,24 +55,43 @@ def install_python_deps():
         console.print(f"[!] Failed to install dependencies: {e}", style="bold red")
 
 def clone_modules():
+    # Vérifie et installe Git si nécessaire
+    if not is_git_installed():
+        console.print("[!] Git not found. Installing Git...", style="bold red")
+        if not install_git():
+            console.print("[!] Git install failed. Skipping module cloning.", style="bold red")
+            return
+
     # Sherlock
     sherlock_path = os.path.join("modules", "sherlock")
     if not os.path.exists(sherlock_path):
         console.print("[*] Cloning Sherlock...", style="bold yellow")
         os.makedirs("modules", exist_ok=True)
-        subprocess.check_call(["git", "clone", "https://github.com/sherlock-project/sherlock.git", sherlock_path])
+        try:
+            subprocess.check_call(["git", "clone", "https://github.com/sherlock-project/sherlock.git", sherlock_path])
+        except Exception as e:
+            console.print(f"[!] Failed to clone Sherlock: {e}", style="bold red")
     else:
         console.print("[*] Updating Sherlock...", style="bold yellow")
-        subprocess.check_call(["git", "-C", sherlock_path, "pull"])
+        try:
+            subprocess.check_call(["git", "-C", sherlock_path, "pull"])
+        except Exception as e:
+            console.print(f"[!] Failed to update Sherlock: {e}", style="bold red")
 
     # Holehe
     holehe_path = os.path.join("modules", "holehe")
     if not os.path.exists(holehe_path):
         console.print("[*] Cloning Holehe...", style="bold yellow")
-        subprocess.check_call(["git", "clone", "https://github.com/megadose/holehe.git", holehe_path])
+        try:
+            subprocess.check_call(["git", "clone", "https://github.com/megadose/holehe.git", holehe_path])
+        except Exception as e:
+            console.print(f"[!] Failed to clone Holehe: {e}", style="bold red")
     else:
         console.print("[*] Updating Holehe...", style="bold yellow")
-        subprocess.check_call(["git", "-C", holehe_path, "pull"])
+        try:
+            subprocess.check_call(["git", "-C", holehe_path, "pull"])
+        except Exception as e:
+            console.print(f"[!] Failed to update Holehe: {e}", style="bold red")
 
 def main():
     console.print("[+] Starting dependency setup...", style="bold green")
