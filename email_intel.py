@@ -1,37 +1,50 @@
-import os
-import sys
+# email_intel.py
 import subprocess
+import sys
+import os
 from rich.console import Console
-from rich.panel import Panel
 
 console = Console()
 
 def run_holehe():
-    os.system('cls' if os.name == 'nt' else 'clear')
-    console.print(Panel("[bold green]HOLEHE ENGINE - EMAIL INTELLIGENCE[/bold green]", border_style="green"))
-    
-    target_email = console.input("\n[bold #00FF00]┌───[[/bold #00FF00][bold white]root@osichef[/bold white][bold #00FF00]]\n└──╼ Target Email : [/bold #00FF00]")
-    
-    if not target_email:
+    console.print("[bold yellow][*] Recherche des comptes associés à un email...[/bold yellow]")
+    email = console.input("\n[bold yellow]┌───[[/bold yellow][bold white]root@osichef[/bold white][bold yellow]]\n└──╼ Email : [/bold yellow]").strip()
+    if not email:
+        console.print("[bold red][!] Aucun email saisi.[/bold red]")
+        input("\nAppuie sur Entrée pour continuer...")
         return
 
-    base_path = os.path.dirname(os.path.abspath(__file__))
-    holehe_root = os.path.join(base_path, "modules", "holehe")
+    # Chemin vers Holehe dans modules/
+    holehe_dir = os.path.join("modules", "holehe")
+    holehe_main = os.path.join(holehe_dir, "holehe", "main.py")
 
-    console.print(f"\n[bold yellow][*] Investigating registered accounts for: {target_email}...[/bold yellow]\\n")
+    # Vérifie si Holehe existe localement
+    if not os.path.exists(holehe_main):
+        console.print("[bold red][!] Holehe non trouvé dans modules/holehe. Lance install_deps.py[/bold red]")
+        input("\nAppuie sur Entrée pour continuer...")
+        return
+
+    console.print(f"[bold cyan][*] Lancement de Holehe pour : {email}[/bold cyan]")
 
     try:
-        # Priority 1: System-wide command
-        subprocess.run(["holehe", target_email], shell=True)
-    except Exception:
-        # Priority 2: Local core script fallback
-        script_path = os.path.join(holehe_root, "holehe", "core.py")
-        if os.path.exists(script_path):
-            subprocess.run([sys.executable, script_path, target_email])
-        else:
-            console.print("[bold red][!] Error: Holehe engine not found in modules.[/bold red]")
+        # Exécute Holehe avec Python
+        result = subprocess.run([
+            sys.executable,
+            holehe_main,
+            email,
+            "--no-color"
+        ], cwd=holehe_dir, capture_output=True, text=True)
 
-    input("\n[Intelligence Gathering Completed] Press Enter to return...")
+        # Affiche le résultat
+        if result.stdout:
+            print(result.stdout)
+        if result.stderr:
+            print(result.stderr)
+
+    except Exception as e:
+        console.print(f"[bold red][!] Erreur : {e}[/bold red]")
+
+    input("\nAppuie sur Entrée pour continuer...")
 
 if __name__ == "__main__":
     run_holehe()

@@ -7,9 +7,9 @@ from rich.console import Console
 
 console = Console()
 
-def is_git_installed():
+def is_command_installed(command):
     try:
-        subprocess.run(["git", "--version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.run([command, "--version"], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         return True
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
@@ -19,7 +19,6 @@ def install_git():
     try:
         if system == "Windows":
             console.print("[*] Installing Git (Windows)...", style="bold yellow")
-            # Télécharge et installe Git via winget
             subprocess.check_call(["winget", "install", "--id", "Git.Git", "-e", "--source", "winget"])
         elif system == "Linux":
             console.print("[*] Installing Git (Linux)...", style="bold yellow")
@@ -33,6 +32,10 @@ def install_git():
         return False
 
 def install_nmap():
+    if is_command_installed("nmap"):
+        console.print("[*] Nmap is already installed.", style="bold green")
+        return
+
     system = platform.system()
     try:
         if system == "Windows":
@@ -56,7 +59,7 @@ def install_python_deps():
 
 def clone_modules():
     # Vérifie et installe Git si nécessaire
-    if not is_git_installed():
+    if not is_command_installed("git"):
         console.print("[!] Git not found. Installing Git...", style="bold red")
         if not install_git():
             console.print("[!] Git install failed. Skipping module cloning.", style="bold red")
