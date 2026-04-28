@@ -1,4 +1,3 @@
-# tools/install_deps.py
 import os
 import sys
 import platform
@@ -52,20 +51,18 @@ def install_nmap():
 def install_python_deps():
     console.print("[*] Installing Python dependencies...", style="bold yellow")
     try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "rich", "requests", "dnspython"])
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "rich", "requests", "dnspython", "holehe", "sherlock-project"])
         console.print("[+] Python dependencies installed.", style="bold green")
     except Exception as e:
         console.print(f"[!] Failed to install dependencies: {e}", style="bold red")
 
 def clone_modules():
-    # Vérifie et installe Git si nécessaire
     if not is_command_installed("git"):
         console.print("[!] Git not found. Installing Git...", style="bold red")
         if not install_git():
             console.print("[!] Git install failed. Skipping module cloning.", style="bold red")
             return
 
-    # Sherlock
     sherlock_path = os.path.join("modules", "sherlock")
     if not os.path.exists(sherlock_path):
         console.print("[*] Cloning Sherlock...", style="bold yellow")
@@ -81,7 +78,6 @@ def clone_modules():
         except Exception as e:
             console.print(f"[!] Failed to update Sherlock: {e}", style="bold red")
 
-    # Holehe
     holehe_path = os.path.join("modules", "holehe")
     if not os.path.exists(holehe_path):
         console.print("[*] Cloning Holehe...", style="bold yellow")

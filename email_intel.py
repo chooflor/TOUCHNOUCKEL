@@ -18,18 +18,21 @@ def run_holehe():
     base_path = os.path.dirname(os.path.abspath(__file__))
     holehe_root = os.path.join(base_path, "modules", "holehe")
 
-    console.print(f"\n[bold yellow][*] Investigating registered accounts for: {target_email}...[/bold yellow]\\n")
+    console.print(f"\n[bold yellow][*] Investigating registered accounts for: {target_email}...[/bold yellow]\n")
 
     try:
-        # Priority 1: System-wide command
-        subprocess.run(["holehe", target_email], shell=True)
-    except Exception:
-        # Priority 2: Local core script fallback
-        script_path = os.path.join(holehe_root, "holehe", "core.py")
-        if os.path.exists(script_path):
-            subprocess.run([sys.executable, script_path, target_email])
-        else:
-            console.print("[bold red][!] Error: Holehe engine not found in modules.[/bold red]")
+        result = subprocess.run(["holehe", target_email], shell=True)
+        
+        if result.returncode != 0:
+            console.print("[yellow][*] Commande globale introuvable, essai via le module local...[/yellow]")
+            script_path = os.path.join(holehe_root, "holehe", "core.py")
+            if os.path.exists(script_path):
+                subprocess.run([sys.executable, script_path, target_email])
+            else:
+                console.print("[bold red][!] Error: Holehe engine not found in modules.[/bold red]")
+
+    except Exception as e:
+        console.print(f"[bold red][!] Erreur critique lors de l'exécution : {e}[/bold red]")
 
     input("\n[Intelligence Gathering Completed] Press Enter to return...")
 
